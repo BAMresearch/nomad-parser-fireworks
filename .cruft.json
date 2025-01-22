@@ -1,0 +1,28 @@
+{
+  "template": "https://github.com/FAIRmat-NFDI/cookiecutter-nomad-plugin",
+  "commit": "5f38479d519664f77a5ea3b7790efb31253b7cc9",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "full_name": "Jose M. Pizarro",
+      "email": "jose.pizarro-blanco@bam.de",
+      "github_username": "BAMresearch",
+      "plugin_name": "nomad-parser-fireworks",
+      "module_name": "nomad_parser_fireworks",
+      "short_description": "Nomad example template",
+      "version": "0.1.0",
+      "license": "Apache Software License 2.0",
+      "include_schema_package": true,
+      "include_normalizer": true,
+      "include_parser": true,
+      "include_app": false,
+      "include_example_uploads": false,
+      "_copy_without_render": [
+        "*.html"
+      ],
+      "_template": "https://github.com/FAIRmat-NFDI/cookiecutter-nomad-plugin",
+      "_commit": "5f38479d519664f77a5ea3b7790efb31253b7cc9"
+    }
+  },
+  "directory": null
+}
