@@ -1,5 +1,14 @@
-name: install-and-test-workflow
+name: install-and-test
 on: [push]
+
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+# `contents` is for permission to the contents of the repository.
+# `pull-requests` is for permission to pull request
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+
 jobs:
   install-and-test:
     runs-on: ubuntu-latest
@@ -12,45 +21,42 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install '.[dev]' --index-url https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple
-        pip install coverage coveralls
-    - name: Test with pytest
+        pip install uv
+        uv pip install -e '.[dev]' --index-url https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple --system
+    - name: mypy
       run: |
-        python -m coverage run -m pytest -sv
-    - name: Submit to coveralls
-      continue-on-error: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        python -m mypy --ignore-missing-imports --follow-imports=silent --no-strict-optional src/nomad_parser_wannier90/schema_packages src/nomad_parser_wannier90/parsers tests
+    - name: Pytesting
       run: |
-        coveralls --service=github
+        python -m pytest -sv tests
   build-and-install:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.9
+    - name: Set up Python 3.10
       uses: actions/setup-python@v5
       with:
-        python-version: 3.9
+        python-version: 3.10
     - name: Build the package
       run: |
-        pip install --upgrade pip
-        pip install build
+        pip install uv
+        uv pip install --upgrade pip --system
+        uv pip install build --system
         python -m build --sdist
     - name: Install the package
       run: |
-        pip install dist/*.tar.gz --index-url https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple
+        uv pip install dist/*.tar.gz --index-url https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple --system
   ruff-linting:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: chartboost/ruff-action@v1
-        with:
-          args: "check ."
-  # to enable auto-formatting check, uncomment the following lines below
-  # ruff-formatting:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: chartboost/ruff-action@v1
-  #       with:
-  #         args: "format . --check"
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: chartboost/ruff-action@v1
+          with:
+            args: "check ."
+  ruff-formatting:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: chartboost/ruff-action@v1
+          with:
+            args: "format . --check --verbose"

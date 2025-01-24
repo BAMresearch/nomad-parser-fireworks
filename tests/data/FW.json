@@ -1,0 +1,117 @@
+{
+    "spec": {
+        "_fworker": "supermuc_lobster",
+        "_tasks": [
+            {
+                "calc_loc": true,
+                "additional_files": [
+                    "OUTCAR",
+                    "vasprun.xml",
+                    "CHG",
+                    "CHGCAR",
+                    "CONTCAR",
+                    "DOSCAR",
+                    "EIGENVAL",
+                    "IBZKPT",
+                    "OSZICAR",
+                    "WAVECAR",
+                    "XDATCAR"
+                ],
+                "contcar_to_poscar": false,
+                "_fw_name": "{{atomate.vasp.firetasks.glue_tasks.CopyVaspOutputs}}"
+            },
+            {
+                "poscar_path": "POSCAR",
+                "incar_path": "INCAR",
+                "potcar_path": "POTCAR",
+                "option": "standard_with_energy_range_from_vasprun",
+                "user_supplied_basis": {
+                    "Si": "3p 3s"
+                },
+                "user_lobsterin_settings": {
+                    "LSODOS": true
+                },
+                "_fw_name": "{{atomate.vasp.firetasks.lobster_tasks.WriteLobsterinputfromIO}}"
+            },
+            {
+                "lobster_cmd": ">>lobster_cmd<<",
+                "gzip_output": true,
+                "gzip_WAVECAR": false,
+                "handler_group": "default",
+                "validator_group": "default",
+                "_fw_name": "{{atomate.vasp.firetasks.lobster_tasks.RunLobster}}"
+            },
+            {
+                "files": [
+                    "WAVECAR",
+                    "WAVECAR.gz"
+                ],
+                "_fw_name": "{{atomate.common.firetasks.glue_tasks.DeleteFiles}}"
+            },
+            {
+                "db_file": ">>db_file<<",
+                "calc_loc": true,
+                "additional_fields": {
+                    "basis_id": 0,
+                    "number_lobster_runs": 1,
+                    "material-id": "mp-149"
+                },
+                "additional_outputs": null,
+                "_fw_name": "{{atomate.vasp.firetasks.lobster_tasks.LobsterRunToDb}}"
+            },
+            {
+                "name": "lobster_calculation_0",
+                "_fw_name": "{{atomate.common.firetasks.glue_tasks.PassCalcLocs}}"
+            }
+        ],
+        "calc_locs": [
+            {
+                "name": "static",
+                "filesystem": null,
+                "path": "/hppfs/work/pn73da/di46tay/Vasp5_phonon_db/Calc/block_2022-12-28-21-39-09-008366/launcher_2022-12-29-02-04-18-435331"
+            }
+        ]
+    },
+    "fw_id": 3680,
+    "created_on": "2022-12-19T09:56:42.062546",
+    "updated_on": "2022-12-31T09:37:21.727099",
+    "launches": [
+        {
+            "fworker": {
+                "name": "worker",
+                "category": "",
+                "query": "{}",
+                "env": {
+                    "db_file": "/dss/dsshome1/00/di46tay/.fireworks_5/db.json",
+                    "vasp_cmd": "srun -N ${SLURM_NNODES} --ntasks=${SLURM_NTASKS} /lrz/sys/applications/vasp5/5.4.4u3_sles15/bin_intelmpi/vasp_std_full",
+                    "lobster_cmd": "/dss/dsshome1/00/di46tay/Lobster/lobster-4.1.0",
+                    "scratch_dir": null,
+                    "auto_npar": true
+                }
+            },
+            "fw_id": 3680,
+            "launch_dir": "/hppfs/work/pn73da/di46tay/Vasp5_phonon_db/Calc/block_2022-12-31-06-26-38-332580/launcher_2022-12-31-09-37-04-985670",
+            "host": "i01r02c06s03",
+            "ip": "172.16.128.143",
+            "trackers": [],
+            "action": null,
+            "state": "RUNNING",
+            "state_history": [
+                {
+                    "state": "RESERVED",
+                    "created_on": "2022-12-31T09:37:04.978237",
+                    "updated_on": "2022-12-31T09:37:04.978241",
+                    "reservation_id": "2541742"
+                },
+                {
+                    "state": "RUNNING",
+                    "created_on": "2022-12-31T09:37:21.724849",
+                    "updated_on": "2022-12-31T09:37:21.724853"
+                }
+            ],
+            "launch_id": 3115
+        }
+    ],
+    "state": "RUNNING",
+    "name": "Si-lobster_calculation_0"
+}

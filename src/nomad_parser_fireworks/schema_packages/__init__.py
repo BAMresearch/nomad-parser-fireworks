@@ -2,7 +2,7 @@ from nomad.config.models.plugins import SchemaPackageEntryPoint
 from pydantic import Field
 
 
-class NewSchemaPackageEntryPoint(SchemaPackageEntryPoint):
+class FireWorksSchemaPackageEntryPoint(SchemaPackageEntryPoint):
     parameter: int = Field(0, description='Custom configuration parameter')
 
     def load(self):
@@ -11,7 +11,7 @@ class NewSchemaPackageEntryPoint(SchemaPackageEntryPoint):
         return m_package
 
 
-schema_package_entry_point = NewSchemaPackageEntryPoint(
-    name='NewSchemaPackage',
-    description='New schema package entry point configuration.',
+nomad_parser_fireworks_schema = FireWorksSchemaPackageEntryPoint(
+    name='FireWorksSchemaPackage',
+    description='Entry point for the FireWorks code-specific schema.',
 )

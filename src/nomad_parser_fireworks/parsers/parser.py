@@ -1,3 +1,4 @@
+import os
 from typing import (
     TYPE_CHECKING,
 )
@@ -11,22 +12,18 @@ if TYPE_CHECKING:
     )
 
 from nomad.config import config
-from nomad.datamodel.metainfo.workflow import Workflow
 from nomad.parsing.parser import MatchingParser
 
 configuration = config.get_plugin_entry_point(
-    'nomad_parser_fireworks.parsers:parser_entry_point'
+    'nomad_parser_fireworks.parsers:nomad_parser_fireworks_parser'
 )
 
 
-class NewParser(MatchingParser):
+class FireWorksParser(MatchingParser):
     def parse(
-        self,
-        mainfile: str,
-        archive: 'EntryArchive',
-        logger: 'BoundLogger',
-        child_archives: dict[str, 'EntryArchive'] = None,
+        self, filepath: str, archive: 'EntryArchive', logger: 'BoundLogger'
     ) -> None:
-        logger.info('NewParser.parse', parameter=configuration.parameter)
-
-        archive.workflow2 = Workflow(name='test')
+        self.filepath = filepath
+        self.archive = archive
+        self.maindir = os.path.dirname(self.filepath)
+        self.mainfile = os.path.basename(self.filepath)
